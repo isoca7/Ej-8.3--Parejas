@@ -6,12 +6,16 @@ import { Tablero, Carta } from "./modelo"
 const barajarCartas = (cartas : Carta[]): Carta[] => {
        return cartas.sort(() => Math.random() - 0.5)
   }
+
+const cambiarEstadoPartida = ()=> {
+  
+}
   
   /*
     Una carta se puede voltear si no está encontrada y no está ya volteada, o no hay dos cartas ya volteadas
   */
   const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number ): boolean => {
-    if(tablero.cartas[indice].estaVuelta){
+    if(tablero.cartas[indice].estaVuelta || !tablero.cartas[indice].encontrada || tablero.estadoPartida!=="DosCartasLevantadas"){
       return false;
     } 
     return true
