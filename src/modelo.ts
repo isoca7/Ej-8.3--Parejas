@@ -136,7 +136,7 @@ const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean => {
   if (
     tablero.cartas[indice].estaVuelta ||
     !tablero.cartas[indice].encontrada ||
-    tablero.estadoPartida !== 'DosCartasLevantadas'
+    tablero.estadoPartida === 'DosCartasLevantadas'
   ) {
     return false
   }
