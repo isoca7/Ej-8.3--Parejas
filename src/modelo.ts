@@ -122,9 +122,14 @@ const asignarCartasVolteadas = (tablero: Tablero) => {
 const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean => {
   if (
     tablero.cartas[indice].estaVuelta ||
+<<<<<<< HEAD
     tablero.cartas[indice].encontrada ||
     tablero.estadoPartida === "DosCartasLevantadas" ||
     tablero.estadoPartida === "PartidaNoIniciada"
+=======
+    !tablero.cartas[indice].encontrada ||
+    tablero.estadoPartida === 'DosCartasLevantadas'
+>>>>>>> f8ef239cf4859d3499d7a443bb69c6825692cb6e
   ) {
     return false;
   }
