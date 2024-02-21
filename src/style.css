@@ -69,10 +69,23 @@ h1{
   width: 200px;
   
 }
+.flipped {
+  animation: cardFlip .275s forwards linear;
+}
+.unflip {
+  animation: cardUnFlip .275s forwards linear;
+}
 
-.carta-girada img{
-
-    transform: translateX(-100%) rotateY(-180deg);
+@keyframes cardFlip {
+  0% {
+    transform: rotateZ(0deg) rotateY(180deg);
+  } 
+  50% {
+    transform: rotateZ(-10deg) rotateY(90deg);
+  }
+  100% {
+    transform: rotateZ(0deg) rotateY(0deg);
+  }
   
 }
 
