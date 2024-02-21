@@ -70,9 +70,28 @@ h1{
   
 }
 
-.carta-girada img{
+.img-carta, .dorso{
+  backface-visibility: hidden;
+}
 
-    transform: translateX(-100%) rotateY(-180deg);
+.toggled {
+  
+  animation: cardFlip .275s forwards linear;
+}
+.unflip {
+  animation: cardUnFlip .275s forwards linear;
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotateZ(0deg) rotateY(180deg);
+  } 
+  50% {
+    transform: rotateZ(-10deg) rotateY(90deg);
+  }
+  100% {
+    transform: rotateZ(0deg) rotateY(0deg);
+  }
   
 }
 

@@ -58,7 +58,10 @@ const crearColeccionDeCartasInicial = (infoCartas: InfoCarta[]): Carta[] => {
   const cartasTransformadas = infoCartas.map((carta) =>
     crearCartaInicial(carta.idFoto, carta.imagen)
   )
-  return [...cartasTransformadas, ...cartasTransformadas]
+  const cartasTransformadas2 = infoCartas.map((carta) =>
+    crearCartaInicial(carta.idFoto, carta.imagen)
+  )
+  return [...cartasTransformadas, ...cartasTransformadas2]
 }
 
 export let cartas: Carta[] = crearColeccionDeCartasInicial(infoCartas)
@@ -94,21 +97,29 @@ const crearTableroInicial = (): Tablero => ({
 
 export let tablero: Tablero = crearTableroInicial()
 
-const cambiarImagenCarta = () => {
-  for (let i = 0; i <= cartasBarajadas.length; i++) {
-    const elementoImagen = document.getElementById(
-      `img-${i}`
-    ) as HTMLImageElement
-    if (elementoImagen !== null && elementoImagen !== undefined) {
-      elementoImagen.addEventListener('click', () => {
-        elementoImagen.src = cartasBarajadas[i].imagen
-        elementoImagen.classList.add('flipped')
-      })
-    }
-  }
-}
+const crearContenerdor = (cartas: Carta[]) => {
+  const containerPrincipal = document.getElementById('juego')
+  cartas.forEach((_, indice) => {
+    const listaCartas = document.createElement('div')
+    listaCartas.classList.add('carta')
+    listaCartas.id = `${indice}`
+    containerPrincipal?.appendChild(listaCartas)
+    const imgDorso = document.createElement('img')
+    imgDorso.src =
+      'https://i.pinimg.com/originals/ca/5b/a7/ca5ba7d121989a03a9e22518a3ccaab1.png'
+    imgDorso.id = `img-dorso-${indice}`
+    imgDorso.classList.add('dorso')
 
-cambiarImagenCarta()
+
+    const imgCarta = document.createElement('img')
+    imgCarta.classList.add('imagen-carta')
+    imgCarta.src = ''
+    imgCarta.id = `img-${indice}`
+    listaCartas.appendChild(imgDorso)
+    listaCartas.appendChild(imgCarta)
+  })
+}
+crearContenerdor(cartasBarajadas)
 
 /*-----------------------------------------------------------------------------------------------*/
 
@@ -128,15 +139,16 @@ const asignarCartasVolteadas = (tablero: Tablero) => {
   } else if (tablero.estadoPartida === 'UnaCartaLevantada') {
     tablero.indiceCartaVolteadaB = indice
     indiceB = tablero.indiceCartaVolteadaB
-    tablero.estadoPartida = 'UnaCartaLevantada'
+    tablero.estadoPartida = 'DosCartasLevantadas'
   }
 }
 
 const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean => {
   if (
     tablero.cartas[indice].estaVuelta ||
-    !tablero.cartas[indice].encontrada ||
-    tablero.estadoPartida !== 'DosCartasLevantadas'
+    tablero.cartas[indice].encontrada ||
+    tablero.estadoPartida === 'DosCartasLevantadas' ||
+    tablero.estadoPartida === "PartidaNoIniciada"
   ) {
     return false
   }
@@ -145,9 +157,10 @@ const sePuedeVoltearLaCarta = (tablero: Tablero, indice: number): boolean => {
 
 const voltearLaCarta = (tablero: Tablero, indice: number): void => {
   //...
-  if (sePuedeVoltearLaCarta(tablero, indice)) {
-    tablero.cartas[indice].estaVuelta = true
-  }
+  const elementoImagen = document.getElementById(
+    `img-dorso-${indice}`) as HTMLImageElement
+    elementoImagen.classList.add("toggled")
+  tablero.cartas[indice].estaVuelta = true
 }
 
 /*
@@ -156,9 +169,12 @@ const voltearLaCarta = (tablero: Tablero, indice: number): void => {
 
 export const sonPareja = (indiceA: number, indiceB: number): boolean => {
   //...
-  return tablero.cartas[indiceA].idFoto === tablero.cartas[indiceB].idFoto
-    ? true
-    : false
+  if (tablero.estadoPartida === 'DosCartasLevantadas') {
+    return tablero.cartas[indiceA].idFoto === tablero.cartas[indiceB].idFoto
+      ? true
+      : false
+  }
+  return false
 }
 
 /*
@@ -185,10 +201,10 @@ const parejaNoEncontrada = (
   indiceB: number
 ): void => {
   // ...
-
-  tablero.cartas[indiceA].estaVuelta = false
-  tablero.cartas[indiceB].estaVuelta = false
-  tablero.estadoPartida = 'CeroCartasLevantadas'
+  if (tablero.estadoPartida === 'DosCartasLevantadas') {
+    tablero.cartas[indiceA].estaVuelta = false
+    tablero.cartas[indiceB].estaVuelta = false
+  }
 }
 
 /*
@@ -205,9 +221,46 @@ export const esPartidaCompleta = (tablero: Tablero): boolean => {
   Iniciar partida
   */
 
+export const taparCartas = (indiceA: number, indiceB: number) => {
+  if (tablero.estadoPartida === 'DosCartasLevantadas') {
+    const elementoImagen1 = document.getElementById(
+      `img-${indiceA}`
+    ) as HTMLImageElement
+    const elementoImagen2 = document.getElementById(
+      `img-${indiceB}`
+    ) as HTMLImageElement
+    setTimeout(() => {
+      elementoImagen1.src =
+        'https://i.pinimg.com/originals/ca/5b/a7/ca5ba7d121989a03a9e22518a3ccaab1.png'
+        elementoImagen1.classList.remove('toggled')
+
+      elementoImagen2.src =
+        'https://i.pinimg.com/originals/ca/5b/a7/ca5ba7d121989a03a9e22518a3ccaab1.png'
+        elementoImagen2.classList.remove('toggled')
+        
+    }, 1000)
+    tablero.cartas[indiceA].estaVuelta = false
+    tablero.cartas[indiceB].estaVuelta = false
+    tablero.estadoPartida = 'CeroCartasLevantadas'
+  }
+}
+
 export const iniciarPartida = (tablero: Tablero): void => {
   //...
   tablero.estadoPartida = 'CeroCartasLevantadas'
+}
+
+const cambiarImagenCarta = (tablero: Tablero, indice: number) => {
+  const elementoImagen = document.getElementById(
+    `img-${indice}`
+  ) as HTMLImageElement
+  const carta = document.getElementById(`${indice}`)
+  if (elementoImagen !== null && elementoImagen !== undefined) {
+    elementoImagen.src = tablero.cartas[indice].imagen
+  }
+  if (carta !== null && carta !== undefined) {
+   
+  }
 }
 
 const handleClickIniciarPartida = () => {
@@ -215,23 +268,29 @@ const handleClickIniciarPartida = () => {
 }
 
 const handleClickCartas = () => {
-  voltearLaCarta(tablero, indice)
-  asignarCartasVolteadas(tablero)
+  if (sePuedeVoltearLaCarta(tablero, indice)) {
+    cambiarImagenCarta(tablero, indice)
+    voltearLaCarta(tablero, indice)
+    asignarCartasVolteadas(tablero)
+  }
+
   if (sonPareja(indiceA, indiceB)) {
     parejaEncontrada(tablero, indiceA, indiceB)
   } else if (!sonPareja(indiceA, indiceB)) {
     parejaNoEncontrada(tablero, indiceA, indiceB)
-  } else if (esPartidaCompleta(tablero)) {
+    taparCartas(indiceA, indiceB)
+  }
+  if (esPartidaCompleta(tablero)) {
     console.log('Ganaste')
   }
 }
 
 for (let i = 0; i <= cartasBarajadas.length; i++) {
-  const carta = document.getElementById(`${i}`) as HTMLElement
+  const carta = document.getElementById(`${i}`) as HTMLDivElement
   if (carta !== null && carta !== undefined) {
     carta.addEventListener('click', () => {
       indice = i
-      handleClickCartas
+      handleClickCartas()
     })
   }
 }
