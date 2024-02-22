@@ -48,8 +48,9 @@ h1{
   justify-content: center;
   
 }
-#juego div{
+.carta{
   display: flex;
+  position: relative;
   border-radius: 1rem;
   justify-self: auto;
   border: 5px #061522 ridge ;
@@ -58,35 +59,45 @@ h1{
   width: 200px;
   cursor: pointer;
   transform-style: preserve-3d;
-  transform-origin: center right;
+  transition: all 0.5s ease-in-out;
   
 }
-#juego div img{
+#juego img{
   display: flex;
+  position: relative;
   height: 200px;
   margin: auto;
   border-radius: 1rem;
   width: 200px;
   
 }
-.flipped {
-  animation: cardFlip .275s forwards linear;
-}
-.unflip {
-  animation: cardUnFlip .275s forwards linear;
+
+.carta.flipped{
+  transform: rotateY(180deg);
 }
 
-@keyframes cardFlip {
-  0% {
-    transform: rotateZ(0deg) rotateY(180deg);
-  } 
-  50% {
-    transform: rotateZ(-10deg) rotateY(90deg);
-  }
-  100% {
-    transform: rotateZ(0deg) rotateY(0deg);
-  }
-  
+.frente, .dorso {
+  backface-visibility: hidden;
+  position: absolute;
+  border-radius: 10px;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.carta .frente {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carta .dorso {
+  background-position: center center;
+  background-size: cover;
+  backface-visibility: hidden;
+}
+.carta .frente {
+  transform: rotateY(180deg);
 }
 
 .logo {
