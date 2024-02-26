@@ -2,7 +2,7 @@
 En el motor nos va a hacer falta un método para barajar cartas
 */
 import { Tablero, tablero, Carta, numeroIntentos, setNumeroIntentos } from "./modelo"
-import { cambiarImagenCarta, taparCartas,muestraNumeroDeIntentos} from "./ui"
+import { cambiarImagenCarta, taparCartas,muestraNumeroDeIntentos, ganarPartida} from "./ui"
  
 const generarNumeroAleatorio = (indiceDelArray: number) =>
   Math.floor(Math.random() * (indiceDelArray + 1));
@@ -137,7 +137,7 @@ export const barajarCartas = (cartas: Carta[]): Carta[] => {
     }
     muestraNumeroDeIntentos()
     if (esPartidaCompleta(tablero)) {
-      console.log('Ganaste')
+      ganarPartida()
     }
   }
   

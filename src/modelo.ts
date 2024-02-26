@@ -49,6 +49,8 @@ export const botonIniciarPartida = document.getElementById(
   'iniciar-partida'
 ) as HTMLButtonElement
 
+export const botonReiniciarPartida = document.getElementById("boton-reset")
+
 const crearCartaInicial = (idFoto: number, imagen: string): Carta => ({
   idFoto,
   imagen,
@@ -59,8 +61,6 @@ const crearCartaInicial = (idFoto: number, imagen: string): Carta => ({
 const crearColeccionDeCartasInicial = (infoCartas: InfoCarta[]): Carta[] => {
   /* Aquí crearemos un array de cartas a partir de un array de infoCartas
      y duplicaremos las cartas para que haya dos de cada tipo.
-     const CARTASTRANSFORMADAS = INFOCARTAS.MAP((CARTA) => CREARCARTAINICIAR(CARTA.IDFOTO, CARTA.IMAGEN))
-     RETURN [...CARTASTRANSFORMADAS, ...CARTASTRANS];
   */
   const cartasTransformadas = infoCartas.map((carta) =>
     crearCartaInicial(carta.idFoto, carta.imagen)

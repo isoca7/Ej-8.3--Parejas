@@ -41,18 +41,15 @@ a:hover {
 .titulo img {
   margin-top: 30px;
 }
-*{
-  background-color: #020e30;
-}
+
 body {
   background-color: #020e30;
   width: 100%;
   height: 100%;
   font-family: 'Pixelify Sans', sans-serif;
- 
 }
 
-h1 {
+.titulo h1 {
   margin-top: 60px;
 }
 
@@ -86,6 +83,7 @@ h1 {
   -webkit-transition-property: transform;
   transition-property: transform;
 }
+
 #juego img {
   display: flex;
   position: relative;
@@ -96,29 +94,28 @@ h1 {
   width: 200px;
 }
 
-.frente,
-.dorso {
-  backface-visibility: hidden;
-  position: absolute;
-  border-radius: 10px;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
 
-.carta .frente {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@keyframes flip-vertical {
+			
+  0% {
+    transform:rotateY(0);
+  }
+  100% {
+    transform:rotateY(180deg);
+  }
 }
-.carta {
-  background-position: center center;
-  background-size: cover;
-  backface-visibility: hidden;
-}
-.carta .frente {
-  transform: rotateY(180deg);
+.carta.flipped {
+  width: 100px; height: 100px; background-color:#ffe672; 
+		
+  animation-name: flip-vertical;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+    
+ 
 }
 
 .logo {
@@ -146,21 +143,22 @@ h1 {
   justify-self: center;
   margin: 60px 30px 40px;
 }
-#contenedor-botones p{
+#contenedor-botones p {
   margin: 5px;
   font-family: 'Press Start 2P', system-ui;
   color: white;
   flex-direction: column;
   justify-self: center;
 }
-#contenedor-botones button {
+.boton {
   display: flex;
   text-align: center;
   font-size: 1.25rem;
   font-family: 'Press Start 2P', system-ui;
+  justify-content: center;
   justify-self: center;
   margin: 30px;
-  margin-top: 50px;
+  margin-top: 30px;
   font-weight: bold;
   padding: 10px 10px 10px 10px;
   background-color: rgb(248, 165, 11);
@@ -169,12 +167,129 @@ h1 {
   -webkit-border-radius: 7px;
   -moz-border-radius: 7px;
   -o-border-radius: 7px;
-  width: 125px;
+  width: auto;
   border-radius: 7px;
   box-shadow: 0 0.2em rgb(120, 88, 41);
   border: none;
   cursor: pointer;
 }
+.carta:hover {
+  -webkit-animation-name: hvr-hang-sink, hvr-hang;
+  animation-name: hvr-hang-sink, hvr-hang;
+  -webkit-animation-duration: 0.3s, 1.5s;
+  animation-duration: 0.3s, 1.5s;
+  -webkit-animation-delay: 0s, 0.3s;
+  animation-delay: 0s, 0.3s;
+  -webkit-animation-timing-function: ease-out, ease-in-out;
+  animation-timing-function: ease-out, ease-in-out;
+  -webkit-animation-iteration-count: 1, infinite;
+  animation-iteration-count: 1, infinite;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-direction: normal, alternate;
+  animation-direction: normal, alternate;
+}
+@keyframes hvr-hang-sink {
+  100% {
+    transform: translateY(8px);
+  }
+}
+@keyframes hvr-hang {
+  0% {
+    transform: translateY(8px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(8px);
+  }
+}
+.contenedor-mensaje-victoria {
+  position: absolute;
+  font-family: 'Press Start 2P', system-ui;
+  border-radius: 1rem;
+  top: 50%;
+  left: 20%;
+  right: 20%;
+  transform: translate(-50%, -50%);
+
+  z-index: 999; /* Asegura que esté encima de otros elementos */
+  text-align: center;
+  display: grid;
+  place-content: center;
+  text-shadow: 0 1px 0 #000;
+
+  --border-angle: 0turn; /* For animation. */
+  --main-bg: conic-gradient(
+    from var(--border-angle),
+    #020e30,
+    rgb(17, 17, 63) 5%,
+    #0b2059 60%,
+    #213363 95%
+  );
+
+  border: solid 5px transparent;
+  border-radius: 2em;
+  --gradient-border: conic-gradient(
+    from var(--border-angle),
+    transparent 25%,
+    #08f,
+    rgb(255, 179, 0) 99%,
+    transparent
+  );
+
+  background: 
+    /* padding-box clip this background in to the overall element except the border. */ var(
+        --main-bg
+      )
+      padding-box,
+    /* border-box extends this background to the border space */
+      var(--gradient-border) border-box,
+    /* Duplicate main background to fill in behind the gradient border. You can remove this if you want the border to extend "outside" the box background. */
+      var(--main-bg) border-box;
+
+  background-position: center center;
+
+  animation: bg-spin 3s linear infinite, fadein 1s linear 0s 1 normal forwards;
+}
+
+.contenedor-mensaje-victoria :hover {
+  animation-play-state: paused;
+}
+
+@keyframes bg-spin {
+  to {
+    --border-angle: 1turn;
+  }
+}
+@keyframes fadein {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Custom Property for --border-angle */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0turn;
+}
+
+.mensaje-victoria {
+  align-items: center;
+  margin-bottom: auto;
+  color: #2687e9;
+  text-shadow: -1px -1px rgb(151, 96, 0), 1px 1px rgb(255, 199, 102);
+  justify-self: center;
+}
+
 button:active {
   box-shadow: none;
   position: relative;
